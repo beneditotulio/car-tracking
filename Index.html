@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Localização do Veículo</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=SUA_CHAVE_DO_GOOGLE_MAPS_API"></script>
+    <script>
+      function initMap(latitude, longitude) {
+        var location = {lat: latitude, lng: longitude};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 15,
+          center: location
+        });
+        var marker = new google.maps.Marker({
+          position: location,
+          map: map
+        });
+      }
+
+      function fetchVehicleLocation() {
+        fetch('/api/get_vehicle_location?license_plate=ABC-1234')
+          .then(response => response.json())
+          .then(data => {
+            initMap(data.latitude, data.longitude);
+          })
+          .catch(error => console.error('Erro ao obter localização:', error));
+      }
+
+      window.onload = fetchVehicleLocation;
+    </script>
+  </head>
+  <body>
+    <h1>Localização do Veículo</h1>
+    <div id="map" style="height: 500px; width: 100%;"></div>
+  </body>
+</html>
